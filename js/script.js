@@ -17,33 +17,19 @@ For assistance:
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
-
-
-
- // create two variables that will represent the index for the first and last student on the page
-
-  // select the element with a class of `student-list` and assign it to a variable
-
-  // set the innerHTML property of the variable you just created to an empty string
-
-  // loop over the length of the `list` parameter
-    // inside the loop create a conditional to display the proper students
-      // inside the conditional:
-        // create the elements needed to display the student information
-        // insert the above elements
-
 const studentList = document.querySelector('.student-list');
-studentList.innerHTML = '';
 
 function showPage(list, page) {
    
 const startIndex = (page * 9) - 9;
 const endIndex = page * 9
 
-   
-   let studentItem = '';
-      for (let i = 0 ; i < list.length; i++) {
 
+studentList.innerHTML = '';
+   
+let studentItem = '';
+      for (let i = 0 ; i < list.length; i++) {
+         
          if (i >= startIndex && i < endIndex) {
             studentItem += `<li class="student-item cf">
             <div class="student-details">
@@ -57,10 +43,11 @@ const endIndex = page * 9
             </li>`;
 
          }
-        
+       
+
       }
       
-   return studentItem;
+   studentList.insertAdjacentHTML('beforeend', studentItem);
    
 }
 
@@ -71,62 +58,95 @@ This function will create and insert/append the elements needed for the paginati
 */
 
 const linkList = document.querySelector('.link-list');
-linkList.innerHTML = '';
-
-
 
 function addPagination(list) {
-   // create a variable to calculate the number of pages needed
+
  const numOfPages = Math.ceil(list.length / 9);
-   // select the element with a class of `link-list` and assign it to a variable
- 
-   // set the innerHTML property of the variable you just created to an empty string
- 
-   // loop over the number of pages needed
-     // create the elements needed to display the pagination button
-     // insert the above elements
+
+
+linkList.innerHTML = '';
+   
 let buttons = '';
 
   for (let i = 1; i <= numOfPages; i++) {
+   buttons += `<li><button type="button">${i}</button></li>`
+   }
+  
+  linkList.insertAdjacentHTML('beforeend', buttons);
 
-      buttons += `<li><button type="button">${i}</button></li>`
+      
+   let firstButton = document.getElementsByTagName('button')[0];
+   firstButton.className = 'active';
 
-  }
- 
- 
-   // give the first pagination button a class of "active"
- 
-   // create an event listener on the `link-list` element
-     // if the click target is a button:
-       // remove the "active" class from the previous button
-       // add the active class to the clicked button
-       // call the showPage function passing the `list` parameter and page to display as arguments
-       return buttons;
-
+   linkList.addEventListener("click", (e)  => {
+   
+      if (e.target.tagName === 'BUTTON') {
+         const activeButton = document.querySelector('.active');
+         activeButton.className = '';
+         e.target.className = 'active';
+         
+         showPage(data, e.target.textContent);
+      }
+   })
  }
 
 
+ /*
+Create the `searchBar` function
+This function will create and insert a search bar that can be used to find students in the list and adjust the number of students and pages shown based on input from user.
+*/
+
+function searchStudents(list) {
+
+const searchBar = document.querySelector('.header');
+let html = ` <label for="search" class="student-search">
+<span>Search by name</span>
+<input id="search" placeholder="Search by name...">
+<button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+</label>
+`
+searchBar.insertAdjacentHTML('beforeend', html);
+
+const searchInput = document.querySelector('#search');
+
+console.log(searchInput);
+
+
+
+// searchInput.addEventListener('keyup', () => {
+
+//    const currentStudent = [];
+//    const userInput = searchInput.value.toLowerCase();
+   
+//    for(let i = 0; i < list.length; i++) {
+//       const studentName = list[i].name.toLowerCase();
+
+//          if(studentName.includes(userInput)) {
+//             currentStudent.push(list[i]);
+            
+//          }
+
+//    }
+
+//    if (currentStudent.length > 0) {
+//       addPagination(currentStudent)
+//       showPage(currentStudent, 1)
+//    } else {
+// const html = `<h3>No Results</h3>`
+// studentList.innerHTML = html;
+// linkList.innerHTML = ``;
+
+
+//    }
+
+// });
+
+}
 
 
 // Call functions
-studentList.insertAdjacentHTML('beforeend', showPage(data, 1));
-linkList.insertAdjacentHTML('beforeend', addPagination(data));
-
-// let firstButton = document.querySelector('button');
-let firstButton = document.getElementsByTagName('button')[0];
-console.log(firstButton);
-firstButton.className = 'active';
+showPage(data, 1);
+addPagination(data);
+searchStudents(data);
 
 
-linkList.addEventListener("click", (e)  => {
-
-
-if (e.target.tagName === 'BUTTON') {
-   const activeButton = document.querySelector('.active');
-   activeButton.className = '';
-   e.target.className = 'active';
-   
-   console.log(showPage(data, e.target.textContent));
-}
-
-});
