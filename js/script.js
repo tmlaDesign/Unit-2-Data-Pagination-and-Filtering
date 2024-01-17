@@ -12,6 +12,62 @@ For assistance:
 */
 
 
+ /*
+Create the searchBar
+This function will create and insert a search bar.
+*/
+
+function createSearchBar() {
+
+   const searchBar = document.querySelector('.header');
+   let html = ` <label for="search" class="student-search">
+   <span>Search by name</span>
+   <input id="search" placeholder="Search by name...">
+   <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+   </label>
+   `
+   searchBar.insertAdjacentHTML('beforeend', html);
+   
+  const searchInput = document.querySelector('#search');
+
+  console.log(searchInput);
+
+  searchInput.addEventListener('keyup', () => {
+   
+   const currentStudent = [];
+   const userInput = searchInput.value.toLowerCase();
+
+   console.log(userInput);
+  
+   
+   for(let i = 0; i < data.length; i++) {
+    const studentFirstName = data[i].name.first.toLowerCase();
+    const studentLastName = data[i].name.last.toLowerCase();
+
+         if(studentFirstName.includes(userInput) || studentLastName.includes(userInput)) {
+            currentStudent.push(data[i]);
+            
+         }
+
+   }
+
+   if (currentStudent.length > 0) {
+      addPagination(currentStudent)
+      showPage(currentStudent, 1)
+   } else {
+const html = `<h3>No Results</h3>`
+studentList.innerHTML = html;
+linkList.innerHTML = ``;
+
+
+      }
+
+   });
+}
+   
+   
+   
+
 
 /*
 Create the `showPage` function
@@ -75,7 +131,7 @@ let buttons = '';
   linkList.insertAdjacentHTML('beforeend', buttons);
 
       
-   let firstButton = document.getElementsByTagName('button')[0];
+   let firstButton = document.getElementsByTagName('button')[1];
    firstButton.className = 'active';
 
    linkList.addEventListener("click", (e)  => {
@@ -91,62 +147,13 @@ let buttons = '';
  }
 
 
- /*
-Create the `searchBar` function
-This function will create and insert a search bar that can be used to find students in the list and adjust the number of students and pages shown based on input from user.
-*/
-
-function searchStudents(list) {
-
-const searchBar = document.querySelector('.header');
-let html = ` <label for="search" class="student-search">
-<span>Search by name</span>
-<input id="search" placeholder="Search by name...">
-<button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
-</label>
-`
-searchBar.insertAdjacentHTML('beforeend', html);
-
-const searchInput = document.querySelector('#search');
-
-console.log(searchInput);
 
 
-
-// searchInput.addEventListener('keyup', () => {
-
-//    const currentStudent = [];
-//    const userInput = searchInput.value.toLowerCase();
-   
-//    for(let i = 0; i < list.length; i++) {
-//       const studentName = list[i].name.toLowerCase();
-
-//          if(studentName.includes(userInput)) {
-//             currentStudent.push(list[i]);
-            
-//          }
-
-//    }
-
-//    if (currentStudent.length > 0) {
-//       addPagination(currentStudent)
-//       showPage(currentStudent, 1)
-//    } else {
-// const html = `<h3>No Results</h3>`
-// studentList.innerHTML = html;
-// linkList.innerHTML = ``;
-
-
-//    }
-
-// });
-
-}
 
 
 // Call functions
+createSearchBar();
 showPage(data, 1);
 addPagination(data);
-searchStudents(data);
 
 
