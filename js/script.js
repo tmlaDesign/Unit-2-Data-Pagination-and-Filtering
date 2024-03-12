@@ -1,80 +1,16 @@
 /*
-Treehouse Techdegree:
-FSJS Project 2 - Data Pagination and Filtering
+These are variables used in the functions below.
 */
+const studentList = document.querySelector('.student-list');
+const linkList = document.querySelector('.link-list');
 
-
-
-/*
-For assistance:
-   Check out the "Project Resources" section of the Instructions tab: https://teamtreehouse.com/projects/data-pagination-and-filtering#instructions
-   Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
-*/
-
-
- /*
-Create the searchBar
-This function will create and insert a search bar.
-*/
-
-function createSearchBar() {
-
-   const searchBar = document.querySelector('.header');
-   let html = ` <label for="search" class="student-search">
-   <span>Search by name</span>
-   <input id="search" placeholder="Search by name...">
-   <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
-   </label>
-   `
-   searchBar.insertAdjacentHTML('beforeend', html);
-   
-  const searchInput = document.querySelector('#search');
-
-  console.log(searchInput);
-
-  searchInput.addEventListener('keyup', () => {
-   
-   const currentStudent = [];
-   const userInput = searchInput.value.toLowerCase();
-
-   console.log(userInput);
-  
-   
-   for(let i = 0; i < data.length; i++) {
-    const studentFirstName = data[i].name.first.toLowerCase();
-    const studentLastName = data[i].name.last.toLowerCase();
-
-         if(studentFirstName.includes(userInput) || studentLastName.includes(userInput)) {
-            currentStudent.push(data[i]);
-            
-         }
-
-   }
-
-   if (currentStudent.length > 0) {
-      addPagination(currentStudent)
-      showPage(currentStudent, 1)
-   } else {
-const html = `<h3>No Results</h3>`
-studentList.innerHTML = html;
-linkList.innerHTML = ``;
-
-
-      }
-
-   });
-}
-   
-   
-   
-
+let currentStudents = [];
+let excludedStudents = [];
 
 /*
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
-const studentList = document.querySelector('.student-list');
-
 function showPage(list, page) {
    
 const startIndex = (page * 9) - 9;
@@ -82,6 +18,7 @@ const endIndex = page * 9
 
 
 studentList.innerHTML = '';
+
    
 let studentItem = '';
       for (let i = 0 ; i < list.length; i++) {
@@ -113,47 +50,109 @@ Create the addPagination function
 This function will create and insert/append the elements needed for the pagination buttons
 */
 
-const linkList = document.querySelector('.link-list');
-
 function addPagination(list) {
 
- const numOfPages = Math.ceil(list.length / 9);
-
+const numOfPages = Math.ceil(list.length / 9);
+console.log(numOfPages);
 
 linkList.innerHTML = '';
    
 let buttons = '';
 
   for (let i = 1; i <= numOfPages; i++) {
-   buttons += `<li><button type="button">${i}</button></li>`
+   if (i === 1) {
+      buttons += `<li><button type="button" class="active">${i}</button></li>`
+
+   } else {
+      buttons += `<li><button type="button">${i}</button></li>`
+   }
+   
    }
   
-  linkList.insertAdjacentHTML('beforeend', buttons);
-
+   linkList.insertAdjacentHTML('beforeend', buttons);
+   
       
-   let firstButton = document.getElementsByTagName('button')[1];
-   firstButton.className = 'active';
+   // let firstButton = document.getElementsByTagName('button')[0];
+   // let firstButton = document.querySelector('button');
+   // firstButton.className = 'active';
 
    linkList.addEventListener("click", (e)  => {
-   
       if (e.target.tagName === 'BUTTON') {
          const activeButton = document.querySelector('.active');
          activeButton.className = '';
          e.target.className = 'active';
-         
-         showPage(data, e.target.textContent);
+   
+               if(currentStudents.length < 1) {
+
+                  showPage(data, e.target.textContent);
+            } else {
+
+               showPage(currentStudents, e.target.textContent);
+            } 
       }
    })
  }
 
 
+ /*
+Create the searchBar
+This function will create and insert a search bar.
+*/
 
+function studentSearchBar() {
+   
+   const searchBar = document.querySelector('.header');
+   let html = ` <label for="search" class="student-search">
+   <span>Search by name</span>
+   <input id="search" placeholder="Search by name...">
+   <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+   </label>
+   `
+   searchBar.insertAdjacentHTML('beforeend', html);
 
+   const searchInput = document.querySelector('#search');
 
+   searchInput.addEventListener('keyup', () => {
+    currentStudents = [];
+    excludedStudents = [];
+   const userInput = searchInput.value.toLowerCase();
+   
+   for(let i = 0; i < data.length; i++) {
+    const studentFirstName = data[i].name.first.toLowerCase();
+    const studentLastName = data[i].name.last.toLowerCase();
+
+         if(studentFirstName.includes(userInput) || studentLastName.includes(userInput)) {
+            currentStudents.push(data[i]);
+            
+         } else if (!studentFirstName.includes(userInput) || !studentLastName.includes(userInput)) {
+
+            excludedStudents.push(data[i]);
+         }
+      
+   }
+
+   console.log(currentStudents);
+   console.log(excludedStudents);
+
+   if (currentStudents.length > 0) {
+         showPage(currentStudents, 1)
+         addPagination(currentStudents)
+         
+      } else {
+         const html = `<h3>No Results</h3>`
+         studentList.innerHTML = html;
+         linkList.innerHTML = ``;
+      }
+
+   });
+
+}
+   
 
 // Call functions
-createSearchBar();
+
 showPage(data, 1);
 addPagination(data);
+studentSearchBar();
 
 
