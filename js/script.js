@@ -1,9 +1,8 @@
 /*
-These are variables used in the functions below.
+These are global variables used in the functions below.
 */
 const studentList = document.querySelector('.student-list');
 const linkList = document.querySelector('.link-list');
-
 let currentStudents = [];
 let excludedStudents = [];
 
@@ -53,13 +52,11 @@ This function will create and insert/append the elements needed for the paginati
 function addPagination(list) {
 
 const numOfPages = Math.ceil(list.length / 9);
-console.log(numOfPages);
-
 linkList.innerHTML = '';
-   
-let buttons = '';
 
+let buttons = '';
   for (let i = 1; i <= numOfPages; i++) {
+   // Setting the first button in the li to have an active class upon the initial building of the pagination buttons
    if (i === 1) {
       buttons += `<li><button type="button" class="active">${i}</button></li>`
 
@@ -71,20 +68,17 @@ let buttons = '';
   
    linkList.insertAdjacentHTML('beforeend', buttons);
    
-      
-   // let firstButton = document.getElementsByTagName('button')[0];
-   // let firstButton = document.querySelector('button');
-   // firstButton.className = 'active';
-
+   // Setting and removing active class upon button click
    linkList.addEventListener("click", (e)  => {
       if (e.target.tagName === 'BUTTON') {
          const activeButton = document.querySelector('.active');
          activeButton.className = '';
          e.target.className = 'active';
-   
+      // Selecting which array to use within showPage function
                if(currentStudents.length < 1) {
 
                   showPage(data, e.target.textContent);
+
             } else {
 
                showPage(currentStudents, e.target.textContent);
@@ -101,6 +95,7 @@ This function will create and insert a search bar.
 
 function studentSearchBar() {
    
+ // Initial creation of search bar
    const searchBar = document.querySelector('.header');
    let html = ` <label for="search" class="student-search">
    <span>Search by name</span>
@@ -120,7 +115,7 @@ function studentSearchBar() {
    for(let i = 0; i < data.length; i++) {
     const studentFirstName = data[i].name.first.toLowerCase();
     const studentLastName = data[i].name.last.toLowerCase();
-
+// Pushing matches from data array with user input into currentStudents array
          if(studentFirstName.includes(userInput) || studentLastName.includes(userInput)) {
             currentStudents.push(data[i]);
             
@@ -131,9 +126,7 @@ function studentSearchBar() {
       
    }
 
-   console.log(currentStudents);
-   console.log(excludedStudents);
-
+// Showing results of user search
    if (currentStudents.length > 0) {
          showPage(currentStudents, 1)
          addPagination(currentStudents)
